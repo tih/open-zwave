@@ -1017,6 +1017,21 @@ uint32 Manager::GetNodeNeighbors(uint32 const _homeId, uint8 const _nodeId, uint
 }
 
 //-----------------------------------------------------------------------------
+// <Manager::SyncronizeNodeNeighbors>
+// Syncronise OZW's copy of the Neighbor List for a Node with the Controller
+//-----------------------------------------------------------------------------
+void Manager::SyncronizeNodeNeighbors(uint32 const _homeId, uint8 const _nodeId)
+{
+	if (Driver* driver = GetDriver(_homeId))
+	{
+		driver->RequestNodeNeighbors(_nodeId, 0);
+	}
+
+	return;
+}
+
+
+//-----------------------------------------------------------------------------
 // <Manager::GetNodeManufacturerName>
 // Get the manufacturer name of a node
 //-----------------------------------------------------------------------------
@@ -1791,6 +1806,25 @@ bool Manager::IsValuePolled(ValueID const& _id)
 
 	return res;
 }
+
+//-----------------------------------------------------------------------------
+// <Manager::IsValueValid>
+// Test whether the valueID is Valid
+//-----------------------------------------------------------------------------
+bool Manager::IsValueValid(ValueID const& _id)
+{
+	if (Driver* driver = GetDriver(_id.GetHomeId()))
+	{
+		Internal::LockGuard LG(driver->m_nodeMutex);
+		if (Internal::VC::Value* value = driver->GetValue(_id))
+		{
+			value->Release();
+			return true;
+		}
+	}
+	return false;
+}
+
 
 //-----------------------------------------------------------------------------
 // <Manager::GetValueAsBitSet>
@@ -3537,6 +3571,8 @@ uint32 Manager::GetAssociations(uint32 const _homeId, uint8 const _nodeId, uint8
 //-----------------------------------------------------------------------------
 // <Manager::GetAssociations>
 // Gets the associations for a group
+// struct InstanceAssociation is defined in Group.h and contains
+// a (NodeID, End Point) pair.
 //-----------------------------------------------------------------------------
 uint32 Manager::GetAssociations(uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, InstanceAssociation** o_associations)
 {
@@ -3593,11 +3629,11 @@ string Manager::GetGroupLabel(uint32 const _homeId, uint8 const _nodeId, uint8 c
 // <Manager::AddAssociation>
 // Adds a node to an association group
 //-----------------------------------------------------------------------------
-void Manager::AddAssociation(uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance)
+void Manager::AddAssociation(uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _endPoint)
 {
 	if (Driver* driver = GetDriver(_homeId))
 	{
-		driver->AddAssociation(_nodeId, _groupIdx, _targetNodeId, _instance);
+		driver->AddAssociation(_nodeId, _groupIdx, _targetNodeId, _endPoint);
 	}
 }
 
@@ -3605,11 +3641,11 @@ void Manager::AddAssociation(uint32 const _homeId, uint8 const _nodeId, uint8 co
 // <Manager::RemoveAssociation>
 // Removes a node from an association group
 //-----------------------------------------------------------------------------
-void Manager::RemoveAssociation(uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _instance)
+void Manager::RemoveAssociation(uint32 const _homeId, uint8 const _nodeId, uint8 const _groupIdx, uint8 const _targetNodeId, uint8 const _endPoint)
 {
 	if (Driver* driver = GetDriver(_homeId))
 	{
-		driver->RemoveAssociation(_nodeId, _groupIdx, _targetNodeId, _instance);
+		driver->RemoveAssociation(_nodeId, _groupIdx, _targetNodeId, _endPoint);
 	}
 }
 
