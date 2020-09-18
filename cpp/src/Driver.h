@@ -491,8 +491,11 @@ namespace OpenZWave
 			uint8 GetNodeVersion(uint8 const _nodeId);
 			uint8 GetNodeSecurity(uint8 const _nodeId);
 			uint8 GetNodeBasic(uint8 const _nodeId);
-			uint8 GetNodeGeneric(uint8 const _nodeId);
-			uint8 GetNodeSpecific(uint8 const _nodeId);
+			string GetNodeBasicString(uint8 const _nodeId);
+			uint8 GetNodeGeneric(uint8 const _nodeId, uint8 _instance);
+			string GetNodeGenericString(uint8 const _nodeId, uint8 _instance);
+			uint8 GetNodeSpecific(uint8 const _nodeId, uint8 _instance);
+			string GetNodeSpecificString(uint8 const _nodeId, uint8 _instance);
 			string GetNodeType(uint8 const _nodeId);
 			uint32 GetNodeNeighbors(uint8 const _nodeId, uint8** o_neighbors);
 
@@ -987,6 +990,7 @@ namespace OpenZWave
 			bool setHttpClient(Internal::i_HttpClient *client);
 		private:
 			bool startConfigDownload(uint16 _manufacturerId, uint16 _productType, uint16 _productId, string configfile, uint8 node = 0);
+			bool startDownload(string target, string file);
 			bool startMFSDownload(string configfile);
 			bool refreshNodeConfig(uint8 node);
 			void processDownload(Internal::HttpDownload *);
