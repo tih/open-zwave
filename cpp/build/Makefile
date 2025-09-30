@@ -13,10 +13,10 @@
 
 
 # what flags we will use for compiling in debug mode
-DEBUG_CFLAGS    := -Wformat -Wall -Wno-unknown-pragmas -Wno-inline -Werror -Wno-error=sequence-point -Wno-sequence-point -ggdb -DDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
+DEBUG_CFLAGS    := -Wformat -Wall -Wno-unknown-pragmas -Wno-inline -Werror -Wno-error=nonnull -Wno-error=sequence-point -Wno-sequence-point -ggdb -DDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
 DEBUG_CPPFLAGS  := -std=c++11 
 # what flags we will use for compiling in release mode
-RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-error=sequence-point -Wno-sequence-point -O3 -DNDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
+RELEASE_CFLAGS  := -Wall -Wno-unknown-pragmas -Werror -Wno-error=nonnull -Wno-error=sequence-point -Wno-sequence-point -O3 -DNDEBUG -fPIC  -DSYSCONFDIR="\"$(PREFIX)/etc/openzwave/\""
 RELEASE_CPPFLAGS := -std=c++11
 #what flags we will use for linking in debug mode
 DEBUG_LDFLAGS	:= -g
